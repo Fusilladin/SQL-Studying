@@ -1,0 +1,144 @@
+SQL Stored Procedures
+
+Stored Procedure: Group of T-SQL statements
+    - If you have a situation where you write the same query over and over, you can save that query as a stored procedure and call it just by it's name
+    - Use CREATE PROCEDURE or CREATE PROC
+
+CREATE PROCEDURE spGetEmployees
+AS
+BEGIN
+    SELECT Name, Gender
+    FROM tblEmployee
+END
+
+---
+
+spGetEmplyeesByGenderAndDepartment 'Male', 1
+
+CREATE PROC spGetEmplyeesByGenderAndDepartment
+@Gender nvarchar(20)
+@DepartmentId int
+AS
+BEGIN
+    SELECT Name, Gender, DepartmentId
+    FROM tblEmployee
+    WHERE Gender = @Gender
+    AND DepartmentId = @DepartmentId
+END
+SELECT * FROM tblEmployee
+
+------------
+
+SELECT * FROM tblEmployee
+
+CREATE PROC spGetEmplyeeCountByGender
+@Gender nvarchar(20),
+@EmployeeCount int output
+AS
+BEGIN
+    SELECT @EmployeeCount = COUNT(Id)
+    FROM tblEmployee
+    WHERE Gender = @Gender
+END
+
+DECLARE @TotalCount int
+EXECUTE spGetEmplyeeCountByGender 'Male', @TotalCount OUTPUT
+IF(@TotalCount IS NULL)
+    PRINT '@TotalCount is null'
+ELSE
+    PRINT '@TotalCount is not null'
+
+----------------
+
+Stored Procedure OUTPUT Parameters or Return Values
+
+CREATE PROC spGetTotalCount1
+@TotalCount int OUT
+AS
+BEGIN
+    return(
+    SELECT @TotalCount = COUNT(Id)
+    FROM tbl_Employee
+    )
+END
+
+DECALRE @Total int
+EXECUTE spGetTotalCount1 @Total OUT
+PRINT @Total
+
+----
+
+CREATE PROC spGetNameById1
+@Id int,
+@Name nvarchar(20) OUT
+AS
+BEGIN
+    SELECT @Name = Name
+    FROM tblEmployee
+    WHERE Id = @Id
+END
+
+DECALRE @Name nvarchar(20)
+EXECUTE spGetNameById1, @Name OUT
+PRINT 'Name =' + @Name
+
+--------------
+------
+
+Advantages of stored procedures
+
+- just have to do the name of the procedure, and then the parameter values
+- so you can change the query based on which parameters are able to be manipulated
+- maintainability and reusability because if you update the stored procedure, then all queries that use it will also update.
+
+--------------
+------
+
+Optional parameters in SP's
+
+Example PROC:
+
+Execute spSearchEmployees @Gender = 'Male', @Age = 29
+
+Alter PROC spSearchEmployees
+@Name nvarchar(50) = NULL,
+@Email nvarchar(50) = NULL,
+@Gender nvarchar(50) = NULL,
+@Age int = NULL
+AS
+BEGIN
+    SELECT * FROM tblEmployee
+    WHERE (Name = @Name OR @Name IS NULL) AND
+        (Gender = @Gender OR @Gender IS NULL) AND
+        (Email = @Email OR @Email IS NULL) AND
+        Age = @Age OR @Age IS NULL
+END
+
+---------------
+-------
+
+Debugging a PROC
+
+DECLARE @TargetNumber INT
+SET @TargetNumber = 10
+EXECUTE spPrintEvenNumbers @TargetNumber
+Print 'Done'
+
+
+BEGIN
+    DECLARE @StartNumber int
+    SET @StartNumber = 1
+
+    WHILE (@StartNumber < @Target)
+    BEGIN
+        IF(@StartNumber%2 = 0)
+        BEGIN
+            PRINT @StartNumber
+        END
+        SET @StartNumber = @StartNumber + 1
+    END
+    PRINT 'Finished printing even numbers till' + RTRIM(@Target)
+END
+
+-----------------
+--------

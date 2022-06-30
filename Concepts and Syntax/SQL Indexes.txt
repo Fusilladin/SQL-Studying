@@ -1,0 +1,118 @@
+SQL Indexes
+
+Why indexes:
+    - used to find data from tables quickly
+    - created on tables and views
+    - finding a chapter in a book drops the time to find the part of the book
+
+Table scans are bad for SQL performance because you have to scan every row - take a very long time
+
+if a table doesnt have the right index to scan then it will have to do a table scan
+
+CREATE INDEX IX_tblEmployee_Salary
+ON tbl_Employee (SALARY ASC)
+
+SP = Stored Procedure
+TBL = Table
+IX = Index
+
+include table name and the column that you are creating it on.
+
+Non-Unique, Unique
+Non-Clustered, Clustered, Spacial, Primary XML
+Filtered, Full Text, Columnstore
+Index with included Columns
+Index on computed columns
+
+Clustered Index: determines the physical order of data in a table. A table can only have one clustered index
+    - automatically creates a custom index if there isnt one already
+
+check the clustered index: (or use object explorer)
+EXECUTE sp_helpindex tblEmployee
+
+- if you add in values in incorrect order it will automatically order the rows of data by the clustered index (customer_id(PK))
+
+- can create a composite clustered index across multiple columns, for example over first_name, last_name
+
+--CREATE CLUSTERED INDEX IX_tblEmployee_Salary
+ON tbl_Employee (customer_id DESC, SALARY ASC)
+--DROP INDEX tblEmployee.[Index_Name]
+
+-- CREATE NONCLUSTERED INDEX IX_tblEmployee_Salary
+ON tbl_Employee (customer_id DESC, SALARY ASC)
+
+Difference between clustered and non-clustered index
+
+1. Only one clustered index per table where you can have more than one non-clustered index
+2. clustered index is faster than non-clustered because it has to refer back to the table
+3. determines the storage order of the rows and doesnt require additional disk space, where as non-clustered index is stored seperately needing additional space.
+
+non clustered is like a seperate table that shows each table row number for each record
+
+---------------
+------
+
+Unique index and unique constraint
+    - used to enforce uniqueness for key values in the index
+    - by default a PK creates a unique clustered index
+    - UNIQUENESS is a property of an index and both clustered and non-clustered indexes can be UNIQUE
+    - PK and Index are actually the same, PK uses  behind the scenes Index to enforce the PK
+
+-- CREATE UNIQUE NONCLUSTERED INDEX
+UIX_tblEmployee_FirstName_LastName
+ON tblEmployee(FirstName, LastName)
+
+-------------
+------
+
+Advantages and disadvantages of indexes
+
+Advatanges:
+SELECT statement with a WHERE clause
+DELETE and UPDATE statement
+ORDER BY ASC
+ORDER BY DESC
+GROUP BY
+
+Disadvantages:
+- Additional disk space (non-clustered)
+- insert update and delete statements can become slow // need to update the indexes as well as the table
+
+---------------
+-------
+
+Key
+
+
+---------------
+-------
+
+Covering index
+Index with Included Columns
+
+Covering index:
+    - is a non-clustered index
+    - Covers the SELECT query by covering all necessary columns
+    - SQL engine doesnt have to lookup the table again
+
+-- DROP INDEX [Index_Name]
+ON [Table_Name]
+CREATE NON CLUSTERED INDEX [Index_Name]
+ON [Table_Name](Col1,Col2)
+
+Index with Included columns
+    - we can create additional columns so they are stored with the index but are not part of the index tree.
+    - allows us to take advantage of features of covering index and reduce storage needs within the index tree.
+    - Basically a covering index without storage needs
+
+--DROP INDEX [Index_name]
+ON [Table_Name]
+CREATE NON CLUSTERED INDEX [Index_Name]
+ON [Table_Name](Col1)
+INCLUDE(col2)
+
+Remove the key lookup/RID lookup
+    - use the covering index or index with included columns
+
+Typically dont add indexes unless they make up 5-10% of the queries on a table.
+Reason is to have the DB respond fast for a user.

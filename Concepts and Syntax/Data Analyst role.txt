@@ -1,0 +1,65 @@
+SQL
+•	CRUD Operations
+o	Create, Read, Update, Delete operations
+o	INSERT, MERGE, SELECT, UPDATE, DELETE statements
+•	DDL, DQL, DML
+o	DDL: Data Definition Language
+	SQL statements for modifying the structure of the database.
+	CREATE, DROP, ALTER, TRUNCATE
+o	DQL: Data Querying Language
+	SQL statements for retrieving information from the database.
+	SELECT
+o	DML: Data Manipulation Language
+	SQL statements for modifying the data stored in the database.
+	INSERT, UPDATE, DELETE, MERGE
+o
+•	CONSTRAINTs
+o	PRIMARY KEY, FOREIGN KEY, DEFAULT, UNIQUE, CHECK
+•	INDEXes
+o	CLUSTERED vs NONCLUSTERED
+o	UNIQUE INDEX
+o	Indexed Columns vs Included Columns
+o	How to tell if an index is useful for a specific query.
+•	STORED PROCEDUREs
+o	Creating, modifying, and executing
+•	ANSII NULLs
+o	Why IS NULL is necessary and “= NULL” does not work.
+•	JOINs
+o	INNER, LEFT (OUTER), RIGHT (OUTER), CROSS
+•	CROSS APPLY and OUTER APPLY
+•	SET Operators
+o	UNION (ALL), EXCEPT, INTERSECT
+•	GROUP BY vs DISTINCT
+•	TRUNCATE vs DELETE
+•	Evaluating a Query Plan
+•	Dynamic SQL
+•	Sub-Queries and Common Table Expressions (CTEs)
+•	Transactions and Isolation Levels
+
+SQL Server Integration Services (SSIS)
+•	Difference between the Control Flow and the Data Flow
+•	How to read or write data to or from a flat file (CSV or TXT) or an Excel file
+•	Connecting to a SQL Server database as either a Source or Destination of data
+•	Running a stored procedure
+•	Passing parameters to a SQL query
+•	Populating SSIS variables from the results of a SQL query
+•	Creating a Derived Column
+•	Branching flow
+•	Deploying SSIS packages to a SQL Server instance
+
+SQL Server Management Studio (SSMS)
+•	Connecting to a database
+•	Running a SQL Query
+•	Importing data
+o	From Excel, Flat Files (CSV or TXT), or another SQL Server instance
+•	SQL Server Agent
+o	Scheduling a new job
+o	Viewing the execution history of an existing job
+
+Excel
+•	Excel Functions
+o	IF, VLOOKUP, CONCATENATE, etc.
+•	Converting Functions to Values
+•	Converting values to Text
+•	Converting to CSV file
+•	Importing data from external sources

@@ -1,0 +1,63 @@
+SQL Transactions
+
+-- begin a Transaction and then do all steps, unless fail then do no steps
+-- maintain DB integrity
+
+-----------
+
+SELECT * FROM tblProduct
+
+Begin Transaction
+UPDATE tblProduct
+SET QtyAvailable = 200
+WHERE ProductId = 1
+
+Rollback Transaction
+Commit Transaction
+
+------------
+
+Create PROC spUpdateAddress
+AS
+Begin
+    Begin Try
+        Begin Transaction
+            Update tblMailingAddr SET City = 'London'
+            WHERE addrId = 1
+            AND EmployeeNum = 101
+
+            Update tblPhysicalAddr SET City = 'London'
+            WHERE addrId = 1
+            AND EmployeeNum = 1-1
+        Commit Transaction
+    End Try
+    Begin Catch
+        Rollback Transaction
+    End Catch
+End
+
+
+-------------
+
+Transaction ACID Test
+Atomic: all txns compelted or all rolled back
+Consistent: all data touched is left in a logically consistent state.
+Isolated: Must affect data without interefering with other concurrent data. cannot make changes to uncommitted information. Usually use locking
+Durable: Once a change is made it is permanent. If an error or shutdown occurs mid-query, then the commands are undone and the data is restored to original state.
+
+----------
+
+--Transfer $100 From Mark to Mary Account
+BEGIN TRY
+    BEGIN TRAN
+        UPDATE Accounts SET Balance = Balance - 100
+        WHERE Id = 1
+        UPDATE Accounts SET Balance = Balance + 100
+        WHERE Id = 2
+    COMMIT TRAN
+    PRINT 'Transaction Committed'
+END TRY
+BEGIN CATCH
+    ROLLBACK TRAN
+    PRINT 'Transaction Rolled Back'
+END CATCH

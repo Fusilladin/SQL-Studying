@@ -1,0 +1,41 @@
+IS NULL
+
+SELECT * FROM tblEmployee
+
+SELECT ISNULL('NULL', 'No Manager') AS Manager
+SELECT COALESCE('John', 'No Manager') AS Manager
+
+CASE WHEN EXPression THEN '' ELSE '' END
+
+SELECT E.Name AS Employee,
+CASE WHEN M.Name IS NULL
+THEN 'No Manager'
+ELSE M.Name END
+AS Manager
+FROM        tbl.Employee E
+LEFT JOIN   tbl.Employee M
+ON          E.ManagerID = M.EmployeeID
+
+COALESCE() Function:
+    - Returns the first NON NULL value
+
+SELECT * FROM tblEmployee
+
+SELECT Id,
+COALESCE(
+    FirstName,
+    MiddleName,
+    LastName
+    )
+AS Name
+FROM tblEmployee
+
+ISNULL() Function:
+    - Used to replace a null value with another value
+
+SELECT ID, ISNULL(SAMPLEID,0) AS 'Sample ID',
+    ISNULL(SAMPLEfname,'N/A') AS 'First Name',
+    ISNULL(SAMPLElname,'NO DATA') AS 'Last Name',
+    City
+    )
+FROM SAMPLE

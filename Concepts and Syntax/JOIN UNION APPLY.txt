@@ -1,0 +1,206 @@
+JOINs
+
+INNER JOIN:
+    - Only join when the tables do not also have a NULL value, so none of the records will be NULL
+
+SELECT * FROM tblEmployee
+SELECT * FROM tbl.Department
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM tblEmployee
+INNER JOIN tblDepartment
+ON tblEmployee.DepartmentId = tblDepartment.Id
+
+    - Will leave out records from first table if they are null in 2nd table
+
+LEFT OUTER JOIN:
+    - returns all the matching rows and non matching rows from the first/left table
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM tblEmployee
+LEFT OUTER JOIN tblDepartment
+ON tblEmployee.DepartmentId = tblDepartment.Id
+
+    will all matching rows and then also non-matching rows from first table
+
+RIGHT OUTER JOIN:
+    - Gives all matching records and then all non-matching records from the 2nd/right table
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM tblEmployee
+RIGHT OUTER JOIN tblDepartment
+ON tblEmployee.DepartmentId = tblDepartment.Id
+
+    - Will have NULL for all of the left table's columns, and then only show the right table records
+    - Useful to see which records are not being used or do not have any corresponding values at all
+
+FULL OUTER JOIN:
+    - If you want to pull all matching records as well as all non-matching records (from both tables)
+    - Will show NULL for the 2nd table columns and then also show NULL for all columns in the first Table as well
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM tblEmployee
+FULL OUTER JOIN tblDepartment
+ON tblEmployee.DepartmentId = tblDepartment.Id
+
+    - Useful to see all records
+
+CROSS JOIN:
+    - Will not have an 'ON Clause'
+    - The number of rows in the first table is multiplied by the number of rows in the 2nd
+    - Take each record from the right/2nd table and then put that into EVERY record for the left/1st table
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM tblEmployee
+CROSS JOIN tblDepartment
+
+    - Useful if you want to compare against all date for example Jan to Jan, Jan to Feb, etc
+
+-----------
+-----
+
+ADVANCED JOINS
+    - Finding only non matching records
+
+Only Records From Left Table:
+    - You can add a WHERE "" IS NULL Clause
+    -
+
+SELECT * FROM tblEmployee
+SELECT * FROM tblDepartment
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM     tblEmployee
+LEFT OUTER JOIN tblDepartment
+ON     tbl.Employee.DepartmentId = tblDepartment.Id
+WHERE   tbl.Employee.DepartmentId IS NULL
+
+SELECT Name, Gender, Salary, DepartmentName
+FROM     tblEmployee
+FULL OUTER JOIN tblDepartment
+ON     tblEmployee.DepartmentId = tblDepartment.Id
+WHERE   tblEmployee.DepartmentId IS NULL
+OR      tblDepartment.Id IS NULL
+
+-------------
+---------
+
+SELF JOIN:
+    - Joining a table with itself
+    - Can be INNER, OUTER, or, CROSS JOIN
+    - Used to reference the same table with itself
+
+--Left Outer Self Join
+SELECT          E.Name AS Employee,
+                M.Name AS Manager
+FROM            tblEmployee AS E
+LEFT OUTER JOIN tblEmployee AS M
+ON              E.ManagerId = M.EmployeeId
+
+--Inner Self Join
+SELECT          E.Name AS Employee,
+                M.Name AS Manager
+FROM            tblEmployee AS E
+INNER JOIN      tblEmployee AS M
+ON              E.ManagerId = M.EmployeeId
+
+--Cross Self Join
+SELECT          E.Name AS Employee,
+                M.Name AS Manager
+FROM            tblEmployee AS E
+CROSS JOIN      tblEmployee AS M
+
+-------------
+---------
+
+CROSS APPLY: (Not available in may SQL versions)
+    - Can be used the same as CROSS JOIN
+    - Can also be conditional with filters/strict joins
+    - Can be applied to a table valued function with a parameter
+
+SELECT t1.session_id AS SessionID,
+    t2.[text] AS QueryText
+FROM sys.dm_exec_requests t1
+CROSS APPLY sys.dm_exec_sql_text(t1.[sql_handle]) t2
+
+--
+--getting all of the records that match
+SELECT D.DepartmentName, E.Name, E.Gender, E.Salary
+FROM Department AS D
+INNER JOIN Employee AS E
+ON D.Id = E.DepartmentId
+
+-- getting all of the records & some non-matching ones
+SELECT D.DepartmentName, E.Name, E.Gender, E.Salary
+FROM Department AS D
+LEFT OUTER JOIN Employee AS E
+ON D.Id = E.DepartmentId
+
+----
+
+SELECT D.DepartmentName, E.Name, E.Gender, E.Salary
+FROM Department D
+CROSS APPLY fn_GetEmployeesByDepartmentId(D.Id) E
+--ON D.Id = E.DepartmentId
+
+SELECT D.DepartmentName, E.Name, E.Gender, E.Salary
+FROM Department D
+OUTER APPLY fn_GetEmployeesByDepartmentId(D.Id) E
+
+CREATE FUNCTION fn_GetEmployeesByDepartmentId (@DepartmentId int)
+RETURNS TABLE
+AS
+RETURN(
+    SELECT *
+    FROM Employee
+    WHERE DepartmentId = @DepartmentId
+)
+
+SELECT * FROM fn_GetEmployeesByDepartmentId(1)
+
+------------
+----
+
+UNION and UNION ALL
+    - Want to combine 2 result sets into one result table
+    - All tables must be combining the same number of columns & in correct order
+
+SELECT * FROM tblIndiaCustomers
+SELECT * FROM tblUKCustomers
+
+    - turn this into one
+    - combines them all with UNION ALL
+    - leaves out duplicates with UNION
+        - UNION is also sorted
+
+SELECT * FROM tblIndiaCustomers
+UNION ALL
+SELECT * FROM tblUKCustomers
+
+    - UNION performs a distinct sort function to remove dupes, then outputs data making it slower than UNION ALL
+
+SELECT * FROM tblIndiaCustomers
+UNION ALL
+SELECT * FROM tblUKCustomers
+UNION ALL
+SELECT * FROM tblUSCustomers
+ORDER BY Name
+
+    - Put ORDER BY after the last select statement
+
+-----------
+----
+
+UNION INTERSECT & EXCEPT
+
+    - Union outputs all records from both tables together
+    - intersect outputs all records that are common in both tables
+    - except outputs all records from left table that are not in the right table
+
+SELECT * FROM tblIndiaCustomers
+INTERSECT
+SELECT * FROM tblUKCustomers
+
+SELECT * FROM tblIndiaCustomers
+EXCEPT
+SELECT * FROM tblUKCustomers

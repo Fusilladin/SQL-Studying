@@ -1,0 +1,18 @@
+Database Constraints Notes
+
+NOT NULL
+DEFAULT
+UNIQUE
+CHECK
+
+NOT NULL:
+    - Cannot be NULL
+DEFAULT:
+    - DB will use the default value specified
+    - sets the value of default salary to 10,000
+    - when nothing is specified, it puts 10,000
+UNIQUE:
+    - when unique is applied to a column, that column cannot contain duplicate values
+CHECK:
+    - data satisfies a certain condition
+    - CHECK student_id > 100

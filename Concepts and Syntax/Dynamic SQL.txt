@@ -1,0 +1,44 @@
+Dynamic SQL
+
+-----
+
+Declare @sql nvarchar(1000)
+Declare @params nvarchar(1000)
+
+Set @sql = 'Select * From Employees'
++ 'Where FirstName=@FirstName and LastName=@LastName'
+Set @params = '@FirstName nvarchar(100),
+    @FirstName nvarchar(100)'
+
+Execute sp_executesql @sql, @params, @FirstName='Mark',
+    @LastName='Hastings'
+
+---------------
+
+Atler proc spDynamicTableName
+@tablename nvarchar(100)
+AS
+Begin
+    Declare @sql nvarchar(max)
+    Set @sql = 'Select * From ' + QUOTENAME(@tablename)
+    Execute sp_executesql @sql
+End
+
+------------------
+
+QUOTENAME
+
+SELECT * FROM [USA Customers]
+
+SELECT * FROM USA Customers
+
+Declare @sql nvarchar(max)
+Declare @tablename nvarchar(50)
+Set @tablename ='USA Customers'
+Set @sql = 'Select * From' +
+    QUOTENAME('dbo') +
+    '.' +
+    QUOTENAME(@tablename)
+Execute sp_executesql @sql
+
+----------------

@@ -1,0 +1,34 @@
+Mathematical Functions
+
+SELECT CEILING(15.2)   -- returns 16
+SELECT CEILING(-15.2)  -- returns -15
+
+SELECT FLOOR(15.2)  -- returns 15
+SELECT FLOOR(-15.2) -- returns -16
+
+SELECT POWER(2,3)   -- returns 8
+
+SELECT SQUARE(9)    -- returns 81
+
+SELECT SQRT(81)     -- returns 9
+
+SELECT RAND([seed_value]) --  rand num from 0-1
+
+SELECT FLOOR(RAND()*100) -- rand num from 1-100
+
+-- Print 10 random numbers from 1-100
+DECLARE @Counter int
+SET @Counter = 1
+WHILE (@Counter <10)
+BEGIN
+    PRINT FLOOR(RAND()*100)
+    SET @Counter = @Counter + 1
+END
+
+ROUND(num, decimal, [truncate])
+
+--------------------
+---------
+
+USER DEFINED-FUNCTIONS
+SCALAR FUNCTIONS

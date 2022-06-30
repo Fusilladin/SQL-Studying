@@ -1,0 +1,91 @@
+Common Table Expressions CTE's
+
+--Temporary result set
+
+--Using Views
+Create View vWEmployeeCount
+AS
+SELECT DeptName, DepartmentId,
+    COUNT(*) AS TotalEmployee
+FROM tblEmployee
+INNER JOIN tblDepartment
+ON tblEmployee.DepartmentId = tblDepartment.DeptId
+GROUP BY DeptName, DepartmentId
+
+SELECT * FROM vWEmployeeCount
+
+SELECT DeptName, TotalEmployees
+FROM vWEmployeeCount
+WHERE TotalEmployees >= 2
+
+----
+
+-- syntax
+WITH cte_name (col1, col2...)
+AS
+(CTE_query)
+
+----
+
+--creating a CTE
+WITH EmployeeCount (DepartmentId, TotalEmployees)
+AS
+(
+    SELECT DepartmentId,
+    COUNT(*) AS TotalEmployees
+    FROM tblEmployee
+    GROUP BY DepartmentId
+)
+SELECT DeptName, TotalEmployees
+FROM tblDepartment
+INNER JOIN EmployeeCount
+ON tblDepartment.DeptId = EmployeeCount.DepartmentId
+ORDER BY TotalEmployees
+
+-----
+
+WITH CTE_Employee
+AS (
+    SELECT FirstName, LastName, Gender, Salary,
+    COUNT(gender)
+    OVER (PARTITION BY Gender) AS TotalGender,
+    AVG(Salary)
+    OVER (PARTITION BY Gender) AS AvgSalary,
+    FROM SQLTutorial..EmployeeDemographics emp
+    JOIN SQLTutorial..EmployeeSalary sal
+        ON emp.EmployeeID = sal.EmployeeID
+    WHERE Salary > '45000'
+)
+SELECT FirstName, AvgSalary
+FROM CTE_Employee
+
+------
+
+SELECT * FROM tblCustomer
+
+WITH CustomerLight(CustomerCode, CustomerName)
+AS
+(
+SELECT CustomerCode, CustomerName
+FROM tblCustomer
+)
+SELECT * FROM CustomerLight
+
+-----
+
+SELECT * FROM Employees
+
+WITH CTE1 AS
+(
+SELECT EmpId, DeptId,
+FROM Employees
+)
+SELECT * FROM CTE1;
+
+WITH CTE2 AS
+(
+SELECT DeptId, Avg(Sales) AS AvgSales
+FROM Employees
+GROUP BY DeptId
+)
+SELECT MAX(AvgSales) FROM CTE2;

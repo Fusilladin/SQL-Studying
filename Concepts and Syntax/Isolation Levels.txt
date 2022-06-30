@@ -1,0 +1,26 @@
+Isolation Levels SQL
+
+----
+
+things are locked during the transaction
+
+----
+
+--Transaction 1
+Set transaction isolation level serialized
+
+Begin Tran
+Update tblInventory
+Set ItemsInStock = 5 WHERE Id = 1
+
+Commit Tran
+
+--SELECT * FROM tblInventory
+
+--Transaction 2
+Set transaction isolation level serialized
+
+Begin Tran
+SELECT ItemsInStock FROM tblInventory WHERE Id = 1
+
+Commit Tran

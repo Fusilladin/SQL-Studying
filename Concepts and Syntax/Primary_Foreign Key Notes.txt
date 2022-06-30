@@ -1,0 +1,58 @@
+Primary/Foreign Key Notes
+
+flat file  - simple
+relational database - complicated
+
+break about the flat file into 2 tables
+    removes data redundancy
+
+Primary key: field that uniquely identifies every field in one table
+Foreign key: doesn't uniquely identify every order, but it relates back to the other table.
+
+relationship can be:
+    1 to 1 [1-1]
+    1 to many [1-m]
+    many to many [m-m]
+
+each customer can have MANY orders but each customer has only ONE customer id, so 1-m
+
+non-relational databases are more complex and require some other things outside of SQL
+
+compact, well structured and efficient
+using relational databases lowers the amount of loading time because u dont have to load every field of millions of records
+
+database designer: plot the entire database system on a canvas using a vis tool
+    1. Entity-Relationship (ER) Diagram:
+        -[]-[]+[]
+    2. Relational schema: an existing idea of how the database must be organized
+    | customer_id |        | item_code   |
+    | first_name  | -----> | customer_id |
+    | last_name   |        | date        |
+    ---------------        ---------------
+
+Database creation:
+    Use SQL to set up the database physically
+Data manipulation:
+    Allows you to use your dataset to extract biz intelligence
+Database Management:
+    comprises all of these previous steps
+
+Database Administration:
+    daily care and maintenance of database
+
+Relational Schema:
+
+-----------
+-----
+
+Primary Key: a column or set of columns whose value exists and is unique for every record in a tab
+    - can only have 1 primary key
+    - may be composed of a set of columns, and not just one single column (id_num, date)
+    - cannot leave it blank/null
+    - not all tables have a primary key
+
+Foreign Key:
+    - same as the primary key it is relating back to
+    - cannot have a value that is not a value in the other table as the primary KEY
+    - can have a value of blank/null
+    - identify relationships between tables
